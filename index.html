@@ -409,6 +409,11 @@
             
             document.getElementById(tabId).classList.add('active');
             event.currentTarget.classList.add('active');
+
+            // Agar canvas membaca lebar container dengan benar saat tab dibuka
+            if (tabId === 'atmosfer') {
+                resizeCanvas();
+            }
         }
 
         /* --- 2. DATA LAPISAN BUMI & INTERAKSI --- */
@@ -451,14 +456,16 @@
         const ctx = canvas.getContext('2d');
         
         function resizeCanvas() {
-            canvas.width = canvas.parentElement.clientWidth;
-            canvas.height = 300;
+            if (canvas.parentElement.clientWidth > 0) {
+                canvas.width = canvas.parentElement.clientWidth;
+                canvas.height = 300;
+            }
         }
         window.onresize = resizeCanvas;
         resizeCanvas();
 
         const raindrops = Array.from({ length: 120 }, () => ({
-            x: Math.random() * canvas.width,
+            x: Math.random() * (canvas.width || 500),
             y: Math.random() * canvas.height,
             length: Math.random() * 12 + 5,
             speed: Math.random() * 6 + 3
@@ -481,7 +488,7 @@
             }
         }
 
-        // Fungsi bantu menggambar awan menggunakan gabungan lingkaran (aman untuk semua browser)
+        // Fungsi menggambar awan menggunakan gabungan lingkaran
         function drawCloud(x, y, scale, isRainy) {
             ctx.save();
             ctx.translate(x, y);
