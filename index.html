@@ -8,7 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* CSS Reset & Variabel Tema */
         :root {
             --primary: #1e3a8a;
             --secondary: #0284c7;
@@ -33,7 +32,6 @@
             line-height: 1.6;
         }
 
-        /* Header Styling */
         header {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
@@ -52,7 +50,6 @@
             opacity: 0.9;
         }
 
-        /* Navigasi Tab */
         nav {
             display: flex;
             justify-content: center;
@@ -84,7 +81,6 @@
             color: var(--secondary);
         }
 
-        /* Kontainer Utama */
         .container {
             max-width: 1000px;
             margin: 2rem auto;
@@ -105,7 +101,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Kartu & Layout */
         .card {
             background: var(--card-bg);
             border-radius: 12px;
@@ -120,10 +115,10 @@
             font-size: 1.5rem;
         }
 
-        /* Tab 1: Visual Struktur Bumi (SVG) */
+        /* Tab 1: Visual Struktur Bumi */
         .earth-visual-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 260px 1fr;
             gap: 2rem;
             align-items: center;
         }
@@ -141,16 +136,40 @@
         .svg-container svg {
             max-width: 100%;
             height: auto;
-            cursor: pointer;
         }
 
         .layer-clickable {
-            transition: all 0.3s ease;
+            cursor: pointer;
+            transition: filter 0.2s ease, opacity 0.2s ease;
         }
 
         .layer-clickable:hover {
-            opacity: 0.8;
-            filter: brightness(1.2);
+            filter: brightness(1.25);
+            opacity: 0.9;
+        }
+
+        .layer-options-side {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            margin-bottom: 1rem;
+        }
+
+        .side-btn {
+            background: #f1f5f9;
+            border: 2px solid var(--border-color);
+            padding: 0.7rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .side-btn:hover, .side-btn.active {
+            background: var(--secondary);
+            color: white;
+            border-color: var(--secondary);
         }
 
         .layer-info-box {
@@ -271,7 +290,6 @@
             font-size: 1.1rem;
         }
 
-        /* Footer */
         footer {
             text-align: center;
             padding: 2rem;
@@ -282,63 +300,71 @@
 </head>
 <body>
 
-    <!-- Header Banner -->
     <header>
         <h1>GeoSphere 🌍</h1>
         <p>Eksplorator Visual Interaktif Lapisan Bumi, Atmosfer, dan Siklus Hidrologi</p>
     </header>
 
-    <!-- Navigasi Menu -->
     <nav>
         <button class="active" onclick="switchTab(event, 'litosfer')">1. Lapisan Bumi</button>
         <button onclick="switchTab(event, 'atmosfer')">2. Simulasi Cuaca</button>
         <button onclick="switchTab(event, 'kuis')">3. Kuis Geografi</button>
     </nav>
 
-    <!-- Konten Utama -->
     <div class="container">
 
-        <!-- TAB 1: STRUKTUR BUMI (SVG) -->
+        <!-- TAB 1: STRUKTUR BUMI -->
         <div id="litosfer" class="tab-content active">
             <div class="card">
                 <h2>Eksplorasi Interior Bumi</h2>
-                <p style="margin-bottom: 1.5rem; color: var(--text-light);">Klik langsung pada bagian lapisan lingkaran bumi di bawah untuk melihat rincian informasi dan karakteristik suhunya.</p>
+                <p style="margin-bottom: 1.5rem; color: var(--text-light);">Klik langsung pada bagian gambar lingkaran bumi di bawah (atau gunakan tombol menu di samping) untuk melihat informasi detail lapisan.</p>
                 
                 <div class="earth-visual-grid">
-                    <!-- Grafik SVG Vektor Lingkaran Bumi -->
+                    <!-- Grafik SVG Vektor Interaktif (Non-overlapping rings) -->
                     <div class="svg-container">
                         <svg viewBox="0 0 300 300" width="240" height="240">
-                            <!-- Inti Dalam -->
-                            <circle class="layer-clickable" cx="150" cy="150" r="40" fill="#dc2626" onclick="showLayer('intidalam')" />
-                            <!-- Inti Luar -->
-                            <circle class="layer-clickable" cx="150" cy="150" r="75" fill="#f97316" stroke="#b91c1c" stroke-width="2" stroke-dasharray="4,4" fill-opacity="0.7" onclick="showLayer('intiluar')" />
-                            <!-- Mantel -->
-                            <circle class="layer-clickable" cx="150" cy="150" r="115" fill="#eab308" fill-opacity="0.5" onclick="showLayer('mantel')" />
-                            <!-- Kerak Bumi -->
-                            <circle class="layer-clickable" cx="150" cy="150" r="135" fill="#22c55e" fill-opacity="0.4" stroke="#15803d" stroke-width="3" onclick="showLayer('kerak')" />
-                            <!-- Label Teks SVG -->
-                            <text x="150" y="28" font-size="10" fill="#1e293b" text-anchor="middle" font-weight="bold">Kerak (Crust)</text>
-                            <text x="150" y="80" font-size="10" fill="#1e293b" text-anchor="middle" font-weight="bold">Mantel (Mantle)</text>
-                            <text x="150" y="125" font-size="10" fill="#fff" text-anchor="middle" font-weight="bold">Inti Luar</text>
-                            <text x="150" y="153" font-size="10" fill="#fff" text-anchor="middle" font-weight="bold">Inti Dalam</text>
+                            <!-- Kerak Bumi (Outer Ring) -->
+                            <circle class="layer-clickable" cx="150" cy="150" r="127.5" fill="none" stroke="#22c55e" stroke-width="25" onclick="showLayer('kerak')" />
+                            <!-- Mantel Bumi (Mid Ring) -->
+                            <circle class="layer-clickable" cx="150" cy="150" r="97.5" fill="none" stroke="#eab308" stroke-width="35" onclick="showLayer('mantel')" />
+                            <!-- Inti Luar (Inner Ring) -->
+                            <circle class="layer-clickable" cx="150" cy="150" r="62.5" fill="none" stroke="#f97316" stroke-width="35" onclick="showLayer('intiluar')" />
+                            <!-- Inti Dalam (Core Circle) -->
+                            <circle class="layer-clickable" cx="150" cy="150" r="45" fill="#dc2626" onclick="showLayer('intidalam')" />
+                            
+                            <!-- Label Teks Panduan -->
+                            <text x="150" y="32" font-size="10" fill="#15803d" text-anchor="middle" font-weight="bold">Kerak</text>
+                            <text x="150" y="70" font-size="10" fill="#854d0e" text-anchor="middle" font-weight="bold">Mantel</text>
+                            <text x="150" y="105" font-size="10" fill="#9a3412" text-anchor="middle" font-weight="bold">Inti Luar</text>
+                            <text x="150" y="153" font-size="9" fill="#fff" text-anchor="middle" font-weight="bold">Inti Dalam</text>
                         </svg>
                     </div>
                     
-                    <!-- Kotak Informasi Detail -->
-                    <div class="layer-info-box" id="layer-info-box">
-                        <h3 id="info-title" style="color: var(--primary); margin-bottom: 0.5rem;">Kerak Bumi (Crust)</h3>
-                        <p id="info-desc">Lapisan terluar bumi yang tipis dan padat. Terbagi menjadi kerak benua (granit) dan kerak samudra (basal). Ketebalannya berkisar antara 5 hingga 70 km.</p>
-                        <p style="margin-top: 1rem;"><strong>Suhu Rata-rata:</strong> Suhu permukaan hingga ~400°C di bagian bawah.</p>
+                    <div>
+                        <!-- Tombol Pilihan Pendukung -->
+                        <div class="layer-options-side">
+                            <button class="side-btn active" id="btn-kerak" onclick="showLayer('kerak')">Kerak Bumi (Crust)</button>
+                            <button class="side-btn" id="btn-mantel" onclick="showLayer('mantel')">Mantel Bumi (Mantle)</button>
+                            <button class="side-btn" id="btn-intiluar" onclick="showLayer('intiluar')">Inti Luar (Outer Core)</button>
+                            <button class="side-btn" id="btn-intidalam" onclick="showLayer('intidalam')">Inti Dalam (Inner Core)</button>
+                        </div>
+
+                        <!-- Kotak Informasi Detail -->
+                        <div class="layer-info-box" id="layer-info-box">
+                            <h3 id="info-title" style="color: var(--primary); margin-bottom: 0.5rem;">Kerak Bumi (Crust)</h3>
+                            <p id="info-desc">Lapisan terluar bumi yang tipis dan padat. Terbagi menjadi kerak benua (granit) dan kerak samudra (basal). Ketebalannya berkisar antara 5 hingga 70 km.</p>
+                            <p style="margin-top: 1rem;"><strong>Suhu Rata-rata:</strong> Suhu permukaan hingga ~400°C di bagian bawah.</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- TAB 2: SIMULASI CUACA & AWAN (CANVAS) -->
+        <!-- TAB 2: SIMULASI CUACA & AWAN -->
         <div id="atmosfer" class="tab-content">
             <div class="card">
                 <h2>Simulasi Dinamis Awan & Siklus Air</h2>
-                <p style="margin-bottom: 1.5rem; color: var(--text-light);">Geser parameter nilai suhu dan kelembapan untuk melihat perubahan animasi bentuk awan dan terjadinya presipitasi (hujan) secara *real-time*.</p>
+                <p style="margin-bottom: 1.5rem; color: var(--text-light);">Geser parameter nilai suhu dan kelembapan di bawah untuk melihat animasi perubahan awan dan terjadinya hujan secara langsung.</p>
                 
                 <div class="sim-controls">
                     <div class="control-group">
@@ -351,7 +377,6 @@
                     </div>
                 </div>
 
-                <!-- Canvas Render Visual -->
                 <canvas id="weatherCanvas"></canvas>
 
                 <div class="sim-status" id="sim-status-text">
@@ -375,12 +400,10 @@
 
     </div>
 
-    <!-- Footer -->
     <footer>
         <p>&copy; 2026 GeoSphere Project. Dibuat untuk Pembelajaran Geografi SMA.</p>
     </footer>
 
-    <!-- Script JavaScript Terpadu -->
     <script>
         /* --- 1. NAVIGASI TAB --- */
         function switchTab(event, tabId) {
@@ -391,7 +414,7 @@
             event.currentTarget.classList.add('active');
         }
 
-        /* --- 2. DATA LAPISAN BUMI --- */
+        /* --- 2. DATA LAPISAN BUMI & INTERAKSI --- */
         const earthData = {
             kerak: {
                 title: "Kerak Bumi (Crust)",
@@ -416,10 +439,16 @@
         };
 
         function showLayer(layerKey) {
+            // Perbarui teks informasi
             const data = earthData[layerKey];
             document.getElementById('info-title').innerText = data.title;
             document.getElementById('info-desc').innerText = data.desc;
             document.getElementById('info-desc').nextElementSibling.innerHTML = `<strong>Suhu Rata-rata:</strong> ${data.temp}`;
+
+            // Perbarui status aktif tombol samping
+            document.querySelectorAll('.side-btn').forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.getElementById(`btn-${layerKey}`);
+            if (activeBtn) activeBtn.classList.add('active');
         }
 
         /* --- 3. SIMULASI ATMOSFER & ANIMASI CANVAS --- */
@@ -433,7 +462,6 @@
         window.onresize = resizeCanvas;
         resizeCanvas();
 
-        // Inisialisasi partikel tetesan hujan
         const raindrops = Array.from({ length: 100 }, () => ({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
@@ -505,7 +533,7 @@
         }
         animateWeather();
 
-        /* --- 4. DATA & LOGIKA KUIS --- */
+        /* --- 4. KUIS GEOGRAFI --- */
         const quizData = [
             {
                 question: "Lapisan bumi manakah yang berbentuk cair dan menghasilkan medan magnet?",
@@ -570,7 +598,6 @@
             loadQuiz();
         }
 
-        // Muat kuis pertama kali saat halaman siap
         loadQuiz();
     </script>
 </body>
