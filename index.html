@@ -320,7 +320,6 @@
                 <p style="margin-bottom: 1.5rem; color: var(--text-light);">Klik langsung pada bagian gambar lingkaran bumi di bawah (atau gunakan tombol menu di samping) untuk melihat informasi detail lapisan.</p>
                 
                 <div class="earth-visual-grid">
-                    <!-- Grafik SVG Vektor Interaktif (Non-overlapping rings) -->
                     <div class="svg-container">
                         <svg viewBox="0 0 300 300" width="240" height="240">
                             <!-- Kerak Bumi (Outer Ring) -->
@@ -341,7 +340,6 @@
                     </div>
                     
                     <div>
-                        <!-- Tombol Pilihan Pendukung -->
                         <div class="layer-options-side">
                             <button class="side-btn active" id="btn-kerak" onclick="showLayer('kerak')">Kerak Bumi (Crust)</button>
                             <button class="side-btn" id="btn-mantel" onclick="showLayer('mantel')">Mantel Bumi (Mantle)</button>
@@ -349,7 +347,6 @@
                             <button class="side-btn" id="btn-intidalam" onclick="showLayer('intidalam')">Inti Dalam (Inner Core)</button>
                         </div>
 
-                        <!-- Kotak Informasi Detail -->
                         <div class="layer-info-box" id="layer-info-box">
                             <h3 id="info-title" style="color: var(--primary); margin-bottom: 0.5rem;">Kerak Bumi (Crust)</h3>
                             <p id="info-desc">Lapisan terluar bumi yang tipis dan padat. Terbagi menjadi kerak benua (granit) dan kerak samudra (basal). Ketebalannya berkisar antara 5 hingga 70 km.</p>
@@ -364,7 +361,7 @@
         <div id="atmosfer" class="tab-content">
             <div class="card">
                 <h2>Simulasi Dinamis Awan & Siklus Air</h2>
-                <p style="margin-bottom: 1.5rem; color: var(--text-light);">Geser parameter nilai suhu dan kelembapan di bawah untuk melihat animasi perubahan awan dan terjadinya hujan secara langsung.</p>
+                <p style="margin-bottom: 1.5rem; color: var(--text-light);">Geser parameter nilai suhu dan kelembapan di bawah untuk melihat animasi perubahan ukuran awan dan terjadinya hujan secara langsung.</p>
                 
                 <div class="sim-controls">
                     <div class="control-group">
@@ -401,7 +398,7 @@
     </div>
 
     <footer>
-        <p>&copy; 2026 GeoSphere Project. Dibuat untuk Pembelajaran Geografi SMA.</p>
+        <p>&copy; 2026 GeoSphere Project. Dibuat untuk Pembelajaran Geografi SMA Kelas 11.</p>
     </footer>
 
     <script>
@@ -439,13 +436,11 @@
         };
 
         function showLayer(layerKey) {
-            // Perbarui teks informasi
             const data = earthData[layerKey];
             document.getElementById('info-title').innerText = data.title;
             document.getElementById('info-desc').innerText = data.desc;
             document.getElementById('info-desc').nextElementSibling.innerHTML = `<strong>Suhu Rata-rata:</strong> ${data.temp}`;
 
-            // Perbarui status aktif tombol samping
             document.querySelectorAll('.side-btn').forEach(btn => btn.classList.remove('active'));
             const activeBtn = document.getElementById(`btn-${layerKey}`);
             if (activeBtn) activeBtn.classList.add('active');
@@ -462,7 +457,7 @@
         window.onresize = resizeCanvas;
         resizeCanvas();
 
-        const raindrops = Array.from({ length: 100 }, () => ({
+        const raindrops = Array.from({ length: 120 }, () => ({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
             length: Math.random() * 12 + 5,
@@ -486,6 +481,24 @@
             }
         }
 
+        // Fungsi bantu menggambar awan menggunakan gabungan lingkaran (aman untuk semua browser)
+        function drawCloud(x, y, scale, isRainy) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.scale(scale, scale);
+
+            ctx.fillStyle = isRainy ? 'rgba(100, 116, 139, 0.95)' : 'rgba(255, 255, 255, 0.95)';
+            ctx.beginPath();
+            ctx.arc(0, 0, 25, 0, Math.PI * 2);
+            ctx.arc(28, -12, 22, 0, Math.PI * 2);
+            ctx.arc(55, 0, 24, 0, Math.PI * 2);
+            ctx.arc(28, 10, 24, 0, Math.PI * 2);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.restore();
+        }
+
         function animateWeather() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -494,25 +507,22 @@
             // Gambar Matahari
             ctx.fillStyle = '#fbbf24';
             ctx.beginPath();
-            ctx.arc(canvas.width - 50, 50, 25, 0, Math.PI * 2);
+            ctx.arc(canvas.width - 60, 50, 25, 0, Math.PI * 2);
             ctx.fill();
 
             // Gambar Permukaan Air (Laut)
             ctx.fillStyle = '#0284c7';
             ctx.fillRect(0, canvas.height - 40, canvas.width, 40);
 
-            // Gambar Awan Dinamis
-            let cloudWidth = 80 + (hum * 1.2);
-            let cloudHeight = 35 + (hum * 0.3);
-            let cloudAlpha = 0.5 + (hum * 0.005);
+            // Ukuran awan membesar otomatis berdasarkan kelembapan
+            let cloudScale = 0.8 + (hum * 0.012);
+            let isRainy = hum > 75;
             
-            ctx.fillStyle = hum > 75 ? `rgba(100, 116, 139, ${cloudAlpha})` : `rgba(255, 255, 255, ${cloudAlpha})`;
-            ctx.beginPath();
-            ctx.roundRect(80, 60, cloudWidth, cloudHeight, 20);
-            ctx.fill();
+            // Gambar awan di tengah-atas layar
+            drawCloud(canvas.width / 2 - 40, 65, cloudScale, isRainy);
 
             // Animasi Hujan Aktif Jika Kelembapan > 75%
-            if (hum > 75) {
+            if (isRainy) {
                 ctx.strokeStyle = '#38bdf8';
                 ctx.lineWidth = 1.5;
                 raindrops.forEach(drop => {
@@ -523,7 +533,7 @@
 
                     drop.y += drop.speed;
                     if (drop.y > canvas.height - 40) {
-                        drop.y = 60;
+                        drop.y = 50;
                         drop.x = Math.random() * canvas.width;
                     }
                 });
