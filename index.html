@@ -3,9 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GeoSphere - Eksplorator Lapisan Bumi & Atmosfer</title>
+    <title>GeoSphere - Eksplorator Visual Lapisan Bumi & Atmosfer</title>
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
+        /* CSS Reset & Variabel Tema */
         :root {
             --primary: #1e3a8a;
             --secondary: #0284c7;
@@ -14,6 +17,7 @@
             --card-bg: #ffffff;
             --text-color: #1e293b;
             --text-light: #64748b;
+            --border-color: #cbd5e1;
         }
 
         * {
@@ -29,12 +33,13 @@
             line-height: 1.6;
         }
 
+        /* Header Styling */
         header {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
             padding: 2rem 1rem;
             text-align: center;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
 
         header h1 {
@@ -47,11 +52,12 @@
             opacity: 0.9;
         }
 
+        /* Navigasi Tab */
         nav {
             display: flex;
             justify-content: center;
             background: #ffffff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
             position: sticky;
             top: 0;
             z-index: 100;
@@ -78,6 +84,7 @@
             color: var(--secondary);
         }
 
+        /* Kontainer Utama */
         .container {
             max-width: 1000px;
             margin: 2rem auto;
@@ -86,7 +93,7 @@
 
         .tab-content {
             display: none;
-            animation: fadeIn 0.5s ease-in-out;
+            animation: fadeIn 0.4s ease-in-out;
         }
 
         .tab-content.active {
@@ -94,15 +101,16 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* Kartu & Layout */
         .card {
             background: var(--card-bg);
             border-radius: 12px;
             padding: 2rem;
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
             margin-bottom: 1.5rem;
         }
 
@@ -112,8 +120,8 @@
             font-size: 1.5rem;
         }
 
-        /* Styling Struktur Bumi */
-        .earth-grid {
+        /* Tab 1: Visual Struktur Bumi (SVG) */
+        .earth-visual-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 2rem;
@@ -121,42 +129,38 @@
         }
 
         @media(max-width: 768px) {
-            .earth-grid {
+            .earth-visual-grid {
                 grid-template-columns: 1fr;
             }
         }
 
-        .earth-layers-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
+        .svg-container {
+            text-align: center;
         }
 
-        .layer-btn {
-            background: #f1f5f9;
-            border: 2px solid #e2e8f0;
-            padding: 1rem;
-            border-radius: 8px;
-            text-align: left;
-            font-weight: 600;
+        .svg-container svg {
+            max-width: 100%;
+            height: auto;
             cursor: pointer;
-            transition: all 0.2s;
         }
 
-        .layer-btn:hover, .layer-btn.active {
-            background: var(--secondary);
-            color: white;
-            border-color: var(--secondary);
+        .layer-clickable {
+            transition: all 0.3s ease;
         }
 
-        .layer-info {
+        .layer-clickable:hover {
+            opacity: 0.8;
+            filter: brightness(1.2);
+        }
+
+        .layer-info-box {
             background: #f8fafc;
             border-left: 5px solid var(--secondary);
             padding: 1.5rem;
             border-radius: 0 8px 8px 0;
         }
 
-        /* Styling Simulasi Atmosfer & Hidrologi */
+        /* Tab 2: Simulasi Atmosfer (Canvas) */
         .sim-controls {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -181,63 +185,25 @@
             accent-color: var(--secondary);
         }
 
-        .sim-screen {
-            background: linear-gradient(to bottom, #bae6fd, #e0f2fe);
-            height: 250px;
-            border-radius: 8px;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            padding: 1rem;
-            border: 2px solid #7dd3fc;
-        }
-
-        .sun {
-            width: 50px;
-            height: 50px;
-            background: #fbbf24;
-            border-radius: 50%;
-            position: absolute;
-            top: 20px;
-            right: 30px;
-            box-shadow: 0 0 20px #f59e0b;
-            transition: transform 0.3s;
-        }
-
-        .cloud {
-            background: white;
-            padding: 10px 20px;
-            border-radius: 50px;
-            position: absolute;
-            top: 40px;
-            left: 50px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            transition: all 0.5s ease;
-        }
-
-        .water-surface {
-            background: #0284c7;
-            height: 40px;
+        canvas {
             width: 100%;
-            position: absolute;
-            bottom: 0;
-            left: 0;
+            height: 300px;
+            background: #bae6fd;
+            border-radius: 8px;
+            border: 2px solid #7dd3fc;
+            display: block;
         }
 
         .sim-status {
-            background: white;
+            background: #f1f5f9;
             padding: 1rem;
             border-radius: 8px;
             margin-top: 1rem;
             font-weight: 500;
-            border: 1px solid #cbd5e1;
+            border: 1px solid var(--border-color);
         }
 
-        /* Styling Kuis */
+        /* Tab 3: Kuis Geografi */
         .quiz-container {
             margin-top: 1rem;
         }
@@ -257,12 +223,13 @@
 
         .option-btn {
             background: #f8fafc;
-            border: 1px solid #cbd5e1;
+            border: 1px solid var(--border-color);
             padding: 0.8rem 1rem;
             border-radius: 6px;
             text-align: left;
             cursor: pointer;
             transition: all 0.2s;
+            font-size: 1rem;
         }
 
         .option-btn:hover {
@@ -281,12 +248,30 @@
             color: #991b1b;
         }
 
+        .action-btn {
+            background: var(--primary);
+            color: white;
+            padding: 0.8rem 1.2rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            transition: background 0.2s;
+        }
+
+        .action-btn:hover {
+            background: #1e40af;
+        }
+
         #quiz-score {
             font-weight: 600;
             color: var(--primary);
             margin-top: 1rem;
+            font-size: 1.1rem;
         }
 
+        /* Footer */
         footer {
             text-align: center;
             padding: 2rem;
@@ -297,33 +282,50 @@
 </head>
 <body>
 
+    <!-- Header Banner -->
     <header>
         <h1>GeoSphere 🌍</h1>
-        <p>Eksplorator Interaktif Lapisan Bumi, Atmosfer, dan Siklus Hidrologi (Materi Geografi SMA Kelas 11)</p>
+        <p>Eksplorator Visual Interaktif Lapisan Bumi, Atmosfer, dan Siklus Hidrologi</p>
     </header>
 
+    <!-- Navigasi Menu -->
     <nav>
-        <button class="active" onclick="switchTab(event, 'litosfer')">1. Struktur Bumi</button>
-        <button onclick="switchTab(event, 'atmosfer')">2. Simulasi Siklus & Awan</button>
+        <button class="active" onclick="switchTab(event, 'litosfer')">1. Lapisan Bumi</button>
+        <button onclick="switchTab(event, 'atmosfer')">2. Simulasi Cuaca</button>
         <button onclick="switchTab(event, 'kuis')">3. Kuis Geografi</button>
     </nav>
 
+    <!-- Konten Utama -->
     <div class="container">
 
-        <!-- TAB 1: STRUKTUR BUMI -->
+        <!-- TAB 1: STRUKTUR BUMI (SVG) -->
         <div id="litosfer" class="tab-content active">
             <div class="card">
-                <h2>Eksplorasi Lapisan Interior Bumi</h2>
-                <p style="margin-bottom: 1.5rem; color: var(--text-light);">Klik salah satu lapisan di bawah untuk melihat detail informasi komposisi, kedalaman, dan suhunya.</p>
+                <h2>Eksplorasi Interior Bumi</h2>
+                <p style="margin-bottom: 1.5rem; color: var(--text-light);">Klik langsung pada bagian lapisan lingkaran bumi di bawah untuk melihat rincian informasi dan karakteristik suhunya.</p>
                 
-                <div class="earth-grid">
-                    <div class="earth-layers-list">
-                        <button class="layer-btn active" onclick="showLayer('kerak')">Kerak Bumi (Crust)</button>
-                        <button class="layer-btn" onclick="showLayer('mantel')">Mantel Bumi (Mantle)</button>
-                        <button class="layer-btn" onclick="showLayer('intiluar')">Inti Luar (Outer Core)</button>
-                        <button class="layer-btn" onclick="showLayer('intidalam')">Inti Dalam (Inner Core)</button>
+                <div class="earth-visual-grid">
+                    <!-- Grafik SVG Vektor Lingkaran Bumi -->
+                    <div class="svg-container">
+                        <svg viewBox="0 0 300 300" width="240" height="240">
+                            <!-- Inti Dalam -->
+                            <circle class="layer-clickable" cx="150" cy="150" r="40" fill="#dc2626" onclick="showLayer('intidalam')" />
+                            <!-- Inti Luar -->
+                            <circle class="layer-clickable" cx="150" cy="150" r="75" fill="#f97316" stroke="#b91c1c" stroke-width="2" stroke-dasharray="4,4" fill-opacity="0.7" onclick="showLayer('intiluar')" />
+                            <!-- Mantel -->
+                            <circle class="layer-clickable" cx="150" cy="150" r="115" fill="#eab308" fill-opacity="0.5" onclick="showLayer('mantel')" />
+                            <!-- Kerak Bumi -->
+                            <circle class="layer-clickable" cx="150" cy="150" r="135" fill="#22c55e" fill-opacity="0.4" stroke="#15803d" stroke-width="3" onclick="showLayer('kerak')" />
+                            <!-- Label Teks SVG -->
+                            <text x="150" y="28" font-size="10" fill="#1e293b" text-anchor="middle" font-weight="bold">Kerak (Crust)</text>
+                            <text x="150" y="80" font-size="10" fill="#1e293b" text-anchor="middle" font-weight="bold">Mantel (Mantle)</text>
+                            <text x="150" y="125" font-size="10" fill="#fff" text-anchor="middle" font-weight="bold">Inti Luar</text>
+                            <text x="150" y="153" font-size="10" fill="#fff" text-anchor="middle" font-weight="bold">Inti Dalam</text>
+                        </svg>
                     </div>
-                    <div class="layer-info" id="layer-info-box">
+                    
+                    <!-- Kotak Informasi Detail -->
+                    <div class="layer-info-box" id="layer-info-box">
                         <h3 id="info-title" style="color: var(--primary); margin-bottom: 0.5rem;">Kerak Bumi (Crust)</h3>
                         <p id="info-desc">Lapisan terluar bumi yang tipis dan padat. Terbagi menjadi kerak benua (granit) dan kerak samudra (basal). Ketebalannya berkisar antara 5 hingga 70 km.</p>
                         <p style="margin-top: 1rem;"><strong>Suhu Rata-rata:</strong> Suhu permukaan hingga ~400°C di bagian bawah.</p>
@@ -332,31 +334,28 @@
             </div>
         </div>
 
-        <!-- TAB 2: SIMULASI ATMOSFER & SIKLUS -->
+        <!-- TAB 2: SIMULASI CUACA & AWAN (CANVAS) -->
         <div id="atmosfer" class="tab-content">
             <div class="card">
-                <h2>Simulasi Pembentukan Awan & Siklus Hidrologi</h2>
-                <p style="margin-bottom: 1.5rem; color: var(--text-light);">Geser parameter suhu dan kelembapan untuk melihat bagaimana atmosfer bereaksi membentuk jenis awan dan potensi hujan.</p>
+                <h2>Simulasi Dinamis Awan & Siklus Air</h2>
+                <p style="margin-bottom: 1.5rem; color: var(--text-light);">Geser parameter nilai suhu dan kelembapan untuk melihat perubahan animasi bentuk awan dan terjadinya presipitasi (hujan) secara *real-time*.</p>
                 
                 <div class="sim-controls">
                     <div class="control-group">
                         <label>Suhu Permukaan (°C): <span id="temp-val">28</span>°C</label>
-                        <input type="range" id="temp-range" min="15" max="45" value="28" oninput="updateSimulation()">
+                        <input type="range" id="temp-range" min="15" max="40" value="28" oninput="updateSimulationParams()">
                     </div>
                     <div class="control-group">
                         <label>Kelembapan Udara (%): <span id="hum-val">50</span>%</label>
-                        <input type="range" id="hum-range" min="10" max="100" value="50" oninput="updateSimulation()">
+                        <input type="range" id="hum-range" min="10" max="100" value="50" oninput="updateSimulationParams()">
                     </div>
                 </div>
 
-                <div class="sim-screen" id="sim-screen">
-                    <div class="sun" id="sun-el"></div>
-                    <div class="cloud" id="cloud-el">Awan Tipis (Cirrus/Cumulus awal)</div>
-                    <div class="water-surface"></div>
-                </div>
+                <!-- Canvas Render Visual -->
+                <canvas id="weatherCanvas"></canvas>
 
                 <div class="sim-status" id="sim-status-text">
-                    Kondisi Normal: Penguapan (Evaporasi) berjalan seimbang. Awan terbentuk tipis di langit.
+                    Kondisi Normal: Penguapan berjalan seimbang. Awan terbentuk tipis di langit cerah.
                 </div>
             </div>
         </div>
@@ -366,11 +365,9 @@
             <div class="card">
                 <h2>Uji Pemahaman Geografi Kelas 11</h2>
                 <div class="quiz-container">
-                    <div class="question-box" id="question-text">Pertanyaan akan dimuat...</div>
-                    <div class="options-list" id="options-container">
-                        <!-- Pilihan opsi dimasukkan via JS -->
-                    </div>
-                    <button class="layer-btn" id="next-btn" onclick="nextQuestion()" style="display:none; width:100%; text-align:center; background:var(--primary); color:white;">Pertanyaan Selanjutnya</button>
+                    <div class="question-box" id="question-text">Memuat pertanyaan...</div>
+                    <div class="options-list" id="options-container"></div>
+                    <button class="action-btn" id="next-btn" onclick="nextQuestion()" style="display:none;">Pertanyaan Selanjutnya</button>
                     <div id="quiz-score"></div>
                 </div>
             </div>
@@ -378,12 +375,14 @@
 
     </div>
 
+    <!-- Footer -->
     <footer>
-        <p>&copy; 2026 GeoSphere Project. Dibuat untuk Pembelajaran Geografi SMA Kelas 11. Siap dipublikasikan di GitHub Pages.</p>
+        <p>&copy; 2026 GeoSphere Project. Dibuat untuk Pembelajaran Geografi SMA.</p>
     </footer>
 
+    <!-- Script JavaScript Terpadu -->
     <script>
-        // Logika Perpindahan Tab
+        /* --- 1. NAVIGASI TAB --- */
         function switchTab(event, tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('nav button').forEach(el => el.classList.remove('active'));
@@ -392,7 +391,7 @@
             event.currentTarget.classList.add('active');
         }
 
-        // Data Lapisan Bumi
+        /* --- 2. DATA LAPISAN BUMI --- */
         const earthData = {
             kerak: {
                 title: "Kerak Bumi (Crust)",
@@ -401,8 +400,8 @@
             },
             mantel: {
                 title: "Mantel Bumi (Mantle)",
-                desc: "Lapisan tebal yang tersusun dari batuan silikat kaya besi dan magnesium. Mengalami arus konveksi yang menggerakkan lempeng tektonik di atasnya.",
-                temp: "Suhu berkisar antara 500°C hingga 900°C di dekat kerak, dan mencapai 3.700°C di dekat inti."
+                desc: "Lapisan tebal yang tersusun dari batuan silikat kaya besi dan magnesium. Mengalami arus konveksi yang menggerakkan lempeng tektonik.",
+                temp: "Suhu berkisar antara 500°C hingga 3.700°C."
             },
             intiluar: {
                 title: "Inti Luar (Outer Core)",
@@ -411,75 +410,115 @@
             },
             intidalam: {
                 title: "Inti Dalam (Inner Core)",
-                desc: "Bola padat yang sangat panas, terutama terdiri dari paduan besi-nikel. Meskipun suhunya sangat tinggi, tekanan ekstrem membuatnya tetap berwujud padat.",
-                temp: "Suhu mencapai sekitar 5.000°C - 6.000°C (hampir setara suhu permukaan matahari)."
+                desc: "Bola padat yang sangat panas, terutama terdiri dari paduan besi-nikel. Tekanan ekstrem di pusat bumi membuatnya tetap berwujud padat.",
+                temp: "Suhu mencapai sekitar 5.000°C - 6.000°C."
             }
         };
 
         function showLayer(layerKey) {
-            document.querySelectorAll('.layer-btn').forEach(btn => btn.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-
             const data = earthData[layerKey];
             document.getElementById('info-title').innerText = data.title;
             document.getElementById('info-desc').innerText = data.desc;
             document.getElementById('info-desc').nextElementSibling.innerHTML = `<strong>Suhu Rata-rata:</strong> ${data.temp}`;
         }
 
-        // Logika Simulasi Atmosfer & Awan
-        function updateSimulation() {
+        /* --- 3. SIMULASI ATMOSFER & ANIMASI CANVAS --- */
+        const canvas = document.getElementById('weatherCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        function resizeCanvas() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = 300;
+        }
+        window.onresize = resizeCanvas;
+        resizeCanvas();
+
+        // Inisialisasi partikel tetesan hujan
+        const raindrops = Array.from({ length: 100 }, () => ({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            length: Math.random() * 12 + 5,
+            speed: Math.random() * 6 + 3
+        }));
+
+        function updateSimulationParams() {
             const temp = parseInt(document.getElementById('temp-range').value);
             const hum = parseInt(document.getElementById('hum-range').value);
 
             document.getElementById('temp-val').innerText = temp;
             document.getElementById('hum-val').innerText = hum;
 
-            const cloudEl = document.getElementById('cloud-el');
-            const sunEl = document.getElementById('sun-el');
             const statusEl = document.getElementById('sim-status-text');
-            const screenEl = document.getElementById('sim-screen');
-
-            // Skala ukuran matahari berdasarkan suhu
-            let sunScale = 1 + (temp - 28) * 0.02;
-            sunEl.style.transform = `scale(${Math.max(0.8, sunScale)})`;
-
-            // Logika Pembentukan Awan & Cuaca
             if (hum < 40) {
-                cloudEl.innerText = "Udara Kering (Langit Cerah)";
-                cloudEl.style.opacity = "0.4";
-                cloudEl.style.background = "rgba(255,255,255,0.6)";
-                screenEl.style.background = "linear-gradient(to bottom, #7dd3fc, #bae6fd)";
-                statusEl.innerText = "Kelembapan rendah: Evaporasi terjadi cepat, namun uap air tidak cukup padat untuk membentuk awan signifikan. Cuaca cerah mendominasi.";
+                statusEl.innerText = "Kelembapan rendah: Evaporasi cepat, langit cerah tanpa awan tebal.";
             } else if (hum >= 40 && hum < 75) {
-                cloudEl.innerText = "Awan Kumulus Terbentuk (Cuaca Berawan)";
-                cloudEl.style.opacity = "0.9";
-                cloudEl.style.background = "white";
-                screenEl.style.background = "linear-gradient(to bottom, #38bdf8, #bae6fd)";
-                statusEl.innerText = "Kelembapan sedang: Proses kondensasi uap air membentuk awan putih cumulus di atmosfer troposfer.";
+                statusEl.innerText = "Kelembapan sedang: Terbentuk awan putih kumulus di atmosfer troposfer.";
             } else {
-                cloudEl.innerText = "☁️ Awan Cumulonimbus (Potensi Hujan Lebat/Petir)";
-                cloudEl.style.opacity = "1";
-                cloudEl.style.background = "#64748b";
-                cloudEl.style.color = "white";
-                screenEl.style.background = "linear-gradient(to bottom, #0f172a, #38bdf8)";
-                statusEl.innerText = "⚠️ Kelembapan tinggi & suhu mendukung: Uap air mengalami kondensasi masif, membentuk awan hujan tebal vertikal (Cumulonimbus) yang siap memicu presipitasi.";
+                statusEl.innerText = "⚠️ Kelembapan tinggi: Terbentuk awan cumulonimbus padat yang memicu hujan deras (presipitasi)!";
             }
         }
 
-        // Data Kuis Geografi
+        function animateWeather() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const hum = parseInt(document.getElementById('hum-range').value);
+
+            // Gambar Matahari
+            ctx.fillStyle = '#fbbf24';
+            ctx.beginPath();
+            ctx.arc(canvas.width - 50, 50, 25, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Gambar Permukaan Air (Laut)
+            ctx.fillStyle = '#0284c7';
+            ctx.fillRect(0, canvas.height - 40, canvas.width, 40);
+
+            // Gambar Awan Dinamis
+            let cloudWidth = 80 + (hum * 1.2);
+            let cloudHeight = 35 + (hum * 0.3);
+            let cloudAlpha = 0.5 + (hum * 0.005);
+            
+            ctx.fillStyle = hum > 75 ? `rgba(100, 116, 139, ${cloudAlpha})` : `rgba(255, 255, 255, ${cloudAlpha})`;
+            ctx.beginPath();
+            ctx.roundRect(80, 60, cloudWidth, cloudHeight, 20);
+            ctx.fill();
+
+            // Animasi Hujan Aktif Jika Kelembapan > 75%
+            if (hum > 75) {
+                ctx.strokeStyle = '#38bdf8';
+                ctx.lineWidth = 1.5;
+                raindrops.forEach(drop => {
+                    ctx.beginPath();
+                    ctx.moveTo(drop.x, drop.y);
+                    ctx.lineTo(drop.x, drop.y + drop.length);
+                    ctx.stroke();
+
+                    drop.y += drop.speed;
+                    if (drop.y > canvas.height - 40) {
+                        drop.y = 60;
+                        drop.x = Math.random() * canvas.width;
+                    }
+                });
+            }
+
+            requestAnimationFrame(animateWeather);
+        }
+        animateWeather();
+
+        /* --- 4. DATA & LOGIKA KUIS --- */
         const quizData = [
             {
-                question: "Lapisan bumi manakah yang berbentuk cair dan bertanggung jawab menciptakan medan magnet bumi?",
+                question: "Lapisan bumi manakah yang berbentuk cair dan menghasilkan medan magnet?",
                 options: ["Kerak Bumi", "Mantel Bumi", "Inti Luar", "Inti Dalam"],
                 answer: 2
             },
             {
-                question: "Proses perubahan wujud uap air menjadi titik-titik air di atmosfer akibat penurunan suhu dinamakan...",
+                question: "Proses perubahan wujud uap air menjadi titik-titik air di atmosfer disebut...",
                 options: ["Evaporasi", "Kondensasi", "Transpirasi", "Infiltrasi"],
                 answer: 1
             },
             {
-                question: "Batas pemisah antara flora dan fauna di Indonesia bagian barat dan tengah dikenal sebagai...",
+                question: "Garis khayal yang memisahkan fauna Indonesia bagian barat dan tengah adalah...",
                 options: ["Garis Weber", "Garis Wallace", "Garis Khatulistiwa", "Garis Isobar"],
                 answer: 1
             }
@@ -531,7 +570,7 @@
             loadQuiz();
         }
 
-        // Muat kuis pertama saat halaman dibuka
+        // Muat kuis pertama kali saat halaman siap
         loadQuiz();
     </script>
 </body>
